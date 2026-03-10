@@ -1,9 +1,5 @@
 // ================== STATE MANAGEMENT ==================
 const state = {
-    num1: 0,
-    num2: 0,
-    correctAnswer: 0,
-    isAnswerCorrect: false,
     countries: []
 };
 
@@ -11,7 +7,6 @@ const state = {
 document.addEventListener('DOMContentLoaded', () => {
     initializeCountries();
     populateCountryDropdown();
-    generateMathChallenge();
 });
 
 // ================== COUNTRIES LIST ==================
@@ -56,169 +51,6 @@ function populateCountryDropdown() {
     if (kenyaIndex >= 0) {
         select.selectedIndex = kenyaIndex;
     }
-}
-
-// ================== MATH CHALLENGE ==================
-function generateMathChallenge() {
-    state.num1 = Math.floor(Math.random() * 20) + 1; // 1-20
-    state.num2 = Math.floor(Math.random() * 20) + 1; // 1-20
-    state.correctAnswer = state.num1 + state.num2;
-    state.isAnswerCorrect = false;
-    
-    const questionEl = document.getElementById('mathQuestion');
-    questionEl.textContent = `${state.num1} + ${state.num2} = ?`;
-    
-    // Clear input
-    document.getElementById('mathAnswer').value = '';
-    
-    // Disable verify button
-    const verifyBtn = document.getElementById('verifyBtn');
-    verifyBtn.disabled = true;
-    verifyBtn.style.opacity = '0.4';
-}
-
-function refreshChallenge() {
-    generateMathChallenge();
-    
-    // Shake animation
-    const questionEl = document.getElementById('mathQuestion');
-    questionEl.style.animation = 'none';
-    setTimeout(() => {
-        questionEl.style.animation = 'shake 0.5s ease';
-    }, 10);
-    
-    // Focus input
-    document.getElementById('mathAnswer').focus();
-    
-    showToast('New challenge generated');
-}
-
-function checkMathAnswer() {
-    const answerInput = document.getElementById('mathAnswer');
-    const userAnswer = parseInt(answerInput.value);
-    const verifyBtn = document.getElementById('verifyBtn');
-    
-    if (isNaN(userAnswer)) {
-        state.isAnswerCorrect = false;
-        verifyBtn.disabled = true;
-        verifyBtn.style.opacity = '0.4';
-        return;
-    }
-    
-    if (userAnswer === state.correctAnswer) {
-        state.isAnswerCorrect = true;
-        verifyBtn.disabled = false;
-        verifyBtn.style.opacity = '1';
-        
-        // Show success feedback
-        const originalBg = answerInput.style.backgroundColor;
-        answerInput.style.backgroundColor = '#22c55e';
-        setTimeout(() => {
-            answerInput.style.backgroundColor = originalBg;
-        }, 300);
-        
-        showToast('✓ Correct!', true);
-    } else {
-        state.isAnswerCorrect = false;
-        verifyBtn.disabled = true;
-        verifyBtn.style.opacity = '0.4';
-    }
-}
-
-// ================== ROBOT VERIFICATION ==================
-function handleCheckboxChange() {
-    const checkbox = document.getElementById('notRobotCheckbox');
-    const mathChallenge = document.getElementById('mathChallenge');
-    const popup = document.getElementById('robotPopup');
-    
-    if (checkbox.checked) {
-        // Expand math challenge
-        mathChallenge.classList.add('expanded');
-        
-        // Expand popup
-        popup.style.minHeight = '480px';
-        
-        // Generate new challenge
-        generateMathChallenge();
-        
-        // Focus input after animation
-        setTimeout(() => {
-            document.getElementById('mathAnswer').focus();
-        }, 300);
-    } else {
-        // Collapse math challenge
-        mathChallenge.classList.remove('expanded');
-        
-        // Shrink popup
-        popup.style.minHeight = '280px';
-        
-        // Reset state
-        state.isAnswerCorrect = false;
-        document.getElementById('mathAnswer').value = '';
-        const verifyBtn = document.getElementById('verifyBtn');
-        verifyBtn.disabled = true;
-        verifyBtn.style.opacity = '0.4';
-    }
-}
-
-function cancelVerification() {
-    hideRobotPopup();
-    showToast('Verification cancelled');
-}
-
-function confirmVerification() {
-    const checkbox = document.getElementById('notRobotCheckbox');
-    
-    if (!state.isAnswerCorrect || !checkbox.checked) {
-        showToast('Please solve the math challenge first');
-        return;
-    }
-    
-    showToast('✓ Verification successful!', true);
-    hideRobotPopup();
-    
-    // Show loading
-    showLoading();
-    
-    // Process registration
-    setTimeout(() => {
-        processRegistration();
-        hideLoading();
-        
-        // Navigate to onboarding
-        showToast('Account created successfully! Proceeding to onboarding...', true);
-        console.log('Navigating to onboarding...');
-        
-        // Small delay to show the toast before navigating
-        setTimeout(() => {
-            window.location.href = 'onboarding-quiz.html';
-        }, 1000);
-    }, 2000);
-}
-
-function showRobotPopup() {
-    document.getElementById('robotOverlay').classList.add('active');
-}
-
-function hideRobotPopup() {
-    document.getElementById('robotOverlay').classList.remove('active');
-    
-    // Reset everything
-    const checkbox = document.getElementById('notRobotCheckbox');
-    checkbox.checked = false;
-    
-    const mathChallenge = document.getElementById('mathChallenge');
-    mathChallenge.classList.remove('expanded');
-    
-    const popup = document.getElementById('robotPopup');
-    popup.style.minHeight = '280px';
-    
-    state.isAnswerCorrect = false;
-    document.getElementById('mathAnswer').value = '';
-    
-    const verifyBtn = document.getElementById('verifyBtn');
-    verifyBtn.disabled = true;
-    verifyBtn.style.opacity = '0.4';
 }
 
 // ================== FORM VALIDATION ==================
@@ -279,7 +111,6 @@ function handleSignUp() {
     // Show loading
     showLoading();
     
-    // Simulate validation
     setTimeout(() => {
         hideLoading();
         
@@ -295,19 +126,17 @@ function handleSignUp() {
                     localStorage.setItem('tomo', JSON.stringify(['tomo']));
                 }
             }
-            
-            // Skip robot verification, go straight to onboarding
-            showToast('Welcome back! Proceeding to onboarding...', true);
-            
-            // Small delay to show toast before navigating
-            setTimeout(() => {
-                window.location.href = 'onboarding-quiz.html';
-            }, 1000);
-            return;
         }
         
-        // Show robot verification for new users
-        showRobotPopup();
+        // Process registration and go straight to onboarding
+        processRegistration();
+        
+        showToast('Account created successfully! Proceeding to onboarding...', true);
+        
+        setTimeout(() => {
+            window.location.href = 'onboarding-quiz.html';
+        }, 1000);
+        
     }, 1500);
 }
 
@@ -384,13 +213,11 @@ function showToast(message, isSuccess = false) {
 }
 
 // ================== UTILITY FUNCTIONS ==================
-// Function to set test data (for testing)
 function setTestData() {
     localStorage.setItem('tomo', JSON.stringify(['tomo']));
     console.log('Test data set');
 }
 
-// Function to clear test data
 function clearTestData() {
     localStorage.removeItem('tomo');
     localStorage.removeItem('activated');
@@ -398,7 +225,6 @@ function clearTestData() {
     console.log('Test data cleared');
 }
 
-// Function to get signup data
 function getSignupData() {
     const data = localStorage.getItem('signuplist');
     return data ? JSON.parse(data) : null;
@@ -408,6 +234,5 @@ function getSignupData() {
 window.signupUtils = {
     setTestData: setTestData,
     clearTestData: clearTestData,
-    getSignupData: getSignupData,
-    showRobotPopup: showRobotPopup
+    getSignupData: getSignupData
 };
