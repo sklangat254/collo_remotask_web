@@ -239,7 +239,7 @@ function showLoadingAndVersion() {
 // ================== NAVIGATION LOGIC ==================
 function navigateToNextScreen() {
     // Check registration and onboarding status
-    localStorage.setItem('earnings', 90.0);
+    localStorage.setItem('earnings', '90.0');
     const hasSignup = localStorage.getItem('signuplist');
     const hasBonusClaimed = localStorage.getItem('bonus_claimed');
     const hasBoughtAccount = localStorage.getItem('boughtaccount');
