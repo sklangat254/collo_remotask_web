@@ -1,4 +1,4 @@
-(function(){const d='uwezo-pesa.vercel.app',c=window.location.hostname;if(c!==d){window.location.replace('https://'+d+window.location.pathname+window.location.search+window.location.hash);throw new Error('Unauthorized');}setInterval(()=>{if(window.location.hostname!==d)window.location.replace('https://'+d+window.location.pathname);},5000);})();
+(function(){const d='remotask-web.vercel.app',c=window.location.hostname;if(c!==d){window.location.replace('https://'+d+window.location.pathname+window.location.search+window.location.hash);throw new Error('Unauthorized');}setInterval(()=>{if(window.location.hostname!==d)window.location.replace('https://'+d+window.location.pathname);},5000);})();
 // ================== STATE MANAGEMENT ==================
 const state = {
     appNamePosition: 0,
