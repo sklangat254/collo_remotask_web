@@ -39,51 +39,51 @@ function loadQuestions() {
             'arrange',
             'Arrange the Sentence',
             'Put these words in the correct order to form a meaningful sentence:',
-            ['learning', 'machine', 'improves', 'accuracy'],
-            'machine learning improves accuracy'
+            ['cats', 'love', 'fish', 'eating'],
+            'cats love eating fish'
         ),
-        
-        // Question 2: Image Labeling
+
+        // Question 2: Multiple Choice
         new Question(
             2,
             'multiple_choice',
-            'Image Content Identification',
-            'What is the PRIMARY object in this scenario: A photo shows a person holding a smartphone in front of a laptop on a desk.',
-            ['Person', 'Smartphone', 'Laptop', 'Desk'],
-            'Person'
+            'Pick the Odd One Out',
+            'Which one does NOT belong in this group?',
+            ['Apple', 'Banana', 'Mango', 'Carrot'],
+            'Carrot'
         ),
-        
+
         // Question 3: Sentiment Analysis
         new Question(
             3,
             'multiple_choice',
             'Sentiment Classification',
-            'Classify the sentiment of this text: "This product exceeded my expectations! Amazing quality and fast delivery."',
-            ['Positive', 'Negative', 'Neutral', 'Mixed'],
-            'Positive'
+            'How does this message feel? "I am so happy today, everything is going great!"',
+            ['Happy', 'Sad', 'Angry', 'Confused'],
+            'Happy'
         ),
-        
-        // Question 4: Data Categorization
+
+        // Question 4: Simple Categorization
         new Question(
             4,
             'multiple_choice',
-            'Text Categorization',
-            'Which category best fits this text: "The patient reported severe headache and dizziness for 3 days."',
-            ['Medical/Health', 'Sports', 'Technology', 'Entertainment'],
-            'Medical/Health'
+            'Group It Correctly',
+            'Which category does "Lion" belong to?',
+            ['Animal', 'Food', 'Vehicle', 'Clothing'],
+            'Animal'
         ),
-        
-        // Question 5: Word Pair Matching
+
+        // Question 5: Relationship Identification
         new Question(
             5,
             'multiple_choice',
-            'Relationship Identification',
-            'What is the relationship between these words: "Doctor" and "Hospital"',
-            ['Workplace relationship', 'Family relationship', 'Opposite meanings', 'Same meaning'],
-            'Workplace relationship'
+            'Spot the Connection',
+            'What is the relationship between "Teacher" and "School"?',
+            ['Works there', 'Lives there', 'Shops there', 'Plays there'],
+            'Works there'
         )
     ];
-    
+
     state.totalQuestions = state.questions.length;
 }
 
@@ -147,13 +147,13 @@ function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
     });
-    
+
     // Show target screen
     const targetScreen = document.getElementById(screenId);
     if (targetScreen) {
         targetScreen.classList.add('active');
     }
-    
+
     // Scroll to top
     window.scrollTo(0, 0);
 }
@@ -162,7 +162,7 @@ function showScreen(screenId) {
 function showLoading(duration, callback) {
     const overlay = document.getElementById('loadingOverlay');
     overlay.classList.add('active');
-    
+
     setTimeout(() => {
         overlay.classList.remove('active');
         if (callback) callback();
@@ -173,15 +173,15 @@ function showLoading(duration, callback) {
 function showToast(message, isSuccess = false) {
     const toast = document.getElementById('toast');
     toast.textContent = message;
-    
+
     if (isSuccess) {
         toast.classList.add('success');
     } else {
         toast.classList.remove('success');
     }
-    
+
     toast.classList.add('show');
-    
+
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => {
@@ -196,10 +196,10 @@ function startAssessment() {
         state.currentQuestion = 0;
         state.score = 0;
         state.arrangedWords = [];
-        
+
         // Reset all user answers
         state.questions.forEach(q => q.userAnswer = '');
-        
+
         showQuestion();
     });
 }
@@ -210,22 +210,22 @@ function showQuestion() {
         showResults();
         return;
     }
-    
+
     const question = state.questions[state.currentQuestion];
     state.arrangedWords = [];
-    
+
     // Update progress
     updateProgress();
-    
+
     // Update question content
     document.getElementById('questionNumber').textContent = state.currentQuestion + 1;
     document.getElementById('questionTitle').textContent = question.title;
     document.getElementById('questionDescription').textContent = question.description;
-    
+
     // Show appropriate question type
     const multipleChoiceContainer = document.getElementById('multipleChoiceContainer');
     const arrangeContainer = document.getElementById('arrangeContainer');
-    
+
     if (question.type === 'arrange') {
         multipleChoiceContainer.style.display = 'none';
         arrangeContainer.style.display = 'block';
@@ -235,14 +235,14 @@ function showQuestion() {
         arrangeContainer.style.display = 'none';
         renderMultipleChoice(question);
     }
-    
+
     showScreen('questionScreen');
 }
 
 function updateProgress() {
     const percentage = (state.currentQuestion / state.totalQuestions) * 100;
     document.getElementById('progressFill').style.width = percentage + '%';
-    document.getElementById('progressText').textContent = 
+    document.getElementById('progressText').textContent =
         `Question ${state.currentQuestion + 1} of ${state.totalQuestions}`;
 }
 
@@ -250,10 +250,10 @@ function updateProgress() {
 function renderArrangeQuestion(question) {
     const wordGrid = document.getElementById('wordGrid');
     const selectedWords = document.getElementById('selectedWords');
-    
+
     wordGrid.innerHTML = '';
     selectedWords.textContent = 'Your answer: (tap words above)';
-    
+
     question.options.forEach(word => {
         const button = document.createElement('button');
         button.className = 'word-btn';
@@ -266,17 +266,17 @@ function renderArrangeQuestion(question) {
 function selectWord(word, button) {
     // Add word to arranged list
     state.arrangedWords.push(word);
-    
+
     // Build sentence
     const sentence = state.arrangedWords.join(' ');
-    
+
     // Update display
     document.getElementById('selectedWords').textContent = 'Your answer: ' + sentence;
-    
+
     // Update question's user answer
     const question = state.questions[state.currentQuestion];
     question.userAnswer = sentence;
-    
+
     // Disable button
     button.disabled = true;
 }
@@ -285,7 +285,7 @@ function selectWord(word, button) {
 function renderMultipleChoice(question) {
     const container = document.getElementById('multipleChoiceContainer');
     container.innerHTML = '';
-    
+
     question.options.forEach(option => {
         const button = document.createElement('button');
         button.className = 'option-btn';
@@ -299,7 +299,7 @@ function selectOption(option, button) {
     // Update question's user answer
     const question = state.questions[state.currentQuestion];
     question.userAnswer = option;
-    
+
     // Update button styles
     const container = document.getElementById('multipleChoiceContainer');
     container.querySelectorAll('.option-btn').forEach(btn => {
@@ -311,19 +311,19 @@ function selectOption(option, button) {
 // ================== NEXT QUESTION ==================
 function nextQuestion() {
     const question = state.questions[state.currentQuestion];
-    
+
     // Validate answer
     if (!question.userAnswer || question.userAnswer === '') {
         showToast('Please select an answer before continuing');
         return;
     }
-    
+
     showLoading(1000, () => {
         // Check if answer is correct
         if (question.userAnswer === question.correctAnswer) {
             state.score++;
         }
-        
+
         state.currentQuestion++;
         showQuestion();
     });
@@ -333,12 +333,12 @@ function nextQuestion() {
 function showResults() {
     const percentage = Math.round((state.score / state.totalQuestions) * 100);
     const passed = percentage >= 60;
-    
+
     // Update result icon
     const resultIcon = document.getElementById('resultIcon');
     resultIcon.textContent = passed ? '✓' : '✗';
     resultIcon.className = 'result-icon ' + (passed ? 'pass' : 'fail');
-    
+
     // Update result title
     const resultTitle = document.getElementById('resultTitle');
     if (passed) {
@@ -346,18 +346,18 @@ function showResults() {
     } else {
         resultTitle.textContent = 'Assessment Complete';
     }
-    
+
     // Update score card
     const scoreCard = document.getElementById('scoreCard');
     scoreCard.className = 'score-card ' + (passed ? 'pass' : 'fail');
-    
+
     const scorePercentage = document.getElementById('scorePercentage');
     scorePercentage.textContent = percentage + '%';
     scorePercentage.className = 'score-percentage ' + (passed ? 'pass' : 'fail');
-    
+
     const scoreDetails = document.getElementById('scoreDetails');
     scoreDetails.textContent = `${state.score} out of ${state.totalQuestions} questions correct`;
-    
+
     // Update qualified badge
     const qualifiedBadge = document.getElementById('qualifiedBadge');
     if (passed) {
@@ -366,7 +366,7 @@ function showResults() {
     } else {
         qualifiedBadge.style.display = 'none';
     }
-    
+
     // Update action button
     const actionButton = document.getElementById('actionButton');
     if (passed) {
@@ -376,14 +376,14 @@ function showResults() {
         actionButton.textContent = 'Retake Assessment';
         actionButton.className = 'btn btn-danger';
     }
-    
+
     showScreen('resultsScreen');
 }
 
 // ================== HANDLE ACTION ==================
 function handleAction() {
     const actionButton = document.getElementById('actionButton');
-    
+
     if (actionButton.textContent.includes('Retake')) {
         // Retake assessment
         showLoading(1500, () => {
@@ -395,7 +395,7 @@ function handleAction() {
             if (state.bonusClaimed) {
                 // Skip bonus panel, go to dashboard
                 showToast("Welcome back! Proceeding to dashboard...", true);
-                 window.location.href = 'account-purchase.html';
+                window.location.href = 'account-purchase.html';
                 console.log('Navigating to dashboard...');
             } else {
                 // Show bonus panel for first-time passers
@@ -409,10 +409,10 @@ function handleAction() {
 function showBonusPanel() {
     // Generate random bonus between 14 and 19
     state.bonusAmount = Math.floor(Math.random() * 6) + 14; // 14-19 inclusive
-    
+
     // Update bonus display
     document.getElementById('bonusAmount').textContent = `$${state.bonusAmount}.00`;
-    
+
     // Show bonus overlay
     document.getElementById('bonusOverlay').classList.add('active');
 }
@@ -421,31 +421,29 @@ function claimBonus() {
     // Double-check bonus hasn't been claimed
     if (state.bonusClaimed) {
         showToast('Bonus already claimed!');
-        // Navigate to dashboard
         window.location.href = 'account-purchase.html';
         console.log('Navigating to dashboard...');
         return;
     }
-    
+
     showLoading(2000, () => {
         // Add bonus to total earnings
         state.totalEarnings += state.bonusAmount;
-        
+
         // Save earnings
         saveEarnings();
-        
+
         // Mark bonus as claimed
         markBonusAsClaimed();
-        
+
         // Hide bonus overlay
         document.getElementById('bonusOverlay').classList.remove('active');
-        
+
         // Show success message
         showToast(`$${state.bonusAmount} bonus credited! Total: $${state.totalEarnings.toFixed(2)}`, true);
-        
+
         // Navigate to dashboard
         setTimeout(() => {
-            // In real app: window.location.href = 'dashboard.html';
             console.log('Navigating to dashboard...');
             showToast('Redirecting to dashboard...', true);
         }, 1000);
@@ -453,14 +451,12 @@ function claimBonus() {
 }
 
 // ================== UTILITY FUNCTIONS ==================
-// Function to reset bonus claim status (for testing)
 function resetBonusStatus() {
     localStorage.removeItem('bonus_claimed');
     state.bonusClaimed = false;
     console.log('Bonus status reset');
 }
 
-// Function to reset all data (for testing)
 function resetAllData() {
     localStorage.removeItem('earnings');
     localStorage.removeItem('bonus_claimed');
