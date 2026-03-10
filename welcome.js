@@ -15,6 +15,7 @@ function handleTermsChange() {
         checkbox.checked
         signUpBtn.disabled = false;
         signUpBtn.style.opacity = '1';
+        state.termsAccepted
     state.termsAccepted = checkbox.checked;
     
     updateSignUpButton();
