@@ -49,14 +49,26 @@ function loadUserData() {
 
     try {
         const raw = localStorage.getItem('earnings');
-        if (raw) {
-            const earnings = JSON.parse(raw);
-            if (earnings && earnings.length > 0) {
-                state.totalEarnings = parseFloat(earnings[0]) || 0;
+        if (raw !== null && raw !== undefined && raw !== '') {
+            let amount = 0;
+            try {
+                const parsed = JSON.parse(raw);
+                // Handle: array [17.5], plain number 17.5, or string "17.5"
+                if (Array.isArray(parsed)) {
+                    amount = parseFloat(parsed[0]);
+                } else {
+                    amount = parseFloat(parsed);
+                }
+            } catch(e) {
+                // Fallback: raw string that isn't valid JSON
+                amount = parseFloat(raw);
+            }
+            if (!isNaN(amount) && amount > 0) {
+                state.totalEarnings = amount;
                 updateBalanceDisplay();
             }
         }
-    } catch(e) {}
+    } catch(e) { console.error('Earnings load error:', e); }
 }
 
 function updateBalanceDisplay() {
@@ -377,6 +389,13 @@ window.dashboardUtils = {
         if (!hasVerifiedBadge() && state.totalEarnings >= state.badgeLimitAmount)
             console.warn('Badge gate active — popup will show on next task click.');
     },
+    debugEarnings() {
+        const raw = localStorage.getItem("earnings");
+        console.log("Raw earnings in localStorage:", raw);
+        console.log("state.totalEarnings:", state.totalEarnings);
+        console.log("Display:", document.getElementById("balanceAmount").textContent);
+    },
+
     simulateActivation() {
         localStorage.setItem('activated', JSON.stringify(['active']));
         updateNotificationBell();
