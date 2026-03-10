@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // ================== TERMS & CONDITIONS ==================
 function handleTermsChange() {
     const checkbox = document.getElementById('termsCheckbox');
+        checkbox.checked
+        signUpBtn.disabled = false;
+        signUpBtn.style.opacity = '1';
     state.termsAccepted = checkbox.checked;
     
     updateSignUpButton();
