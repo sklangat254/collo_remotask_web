@@ -1,21 +1,23 @@
 // ================== STATE MANAGEMENT ==================
 const state = {
-    termsAccepted: false
+    termsAccepted: true // Default to true
 };
 
 // ================== INITIALIZATION ==================
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize button state
+    // Pre-check the checkbox on page load
+    const checkbox = document.getElementById('termsCheckbox');
+    if (checkbox) {
+        checkbox.checked = true;
+    }
+
+    // Initialize button state (always enabled)
     updateSignUpButton();
 });
 
 // ================== TERMS & CONDITIONS ==================
 function handleTermsChange() {
     const checkbox = document.getElementById('termsCheckbox');
-        checkbox.checked
-        signUpBtn.disabled = false;
-        signUpBtn.style.opacity = '1';
-        state.termsAccepted
     state.termsAccepted = checkbox.checked;
     
     updateSignUpButton();
@@ -29,13 +31,9 @@ function handleTermsChange() {
 function updateSignUpButton() {
     const signUpBtn = document.getElementById('signUpBtn');
     
-    if (state.termsAccepted) {
-        signUpBtn.disabled = false;
-        signUpBtn.style.opacity = '1';
-    } else {
-        signUpBtn.disabled = true;
-        signUpBtn.style.opacity = '0.4';
-    }
+    // Always keep button enabled
+    signUpBtn.disabled = false;
+    signUpBtn.style.opacity = '1';
 }
 
 // ================== NAVIGATION HANDLERS ==================
