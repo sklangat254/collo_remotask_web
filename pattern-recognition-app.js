@@ -22,10 +22,19 @@ document.addEventListener('DOMContentLoaded', () => {
 // Load Progress from localStorage
 function loadProgress() {
     // Load total earnings
-    const earnings = localStorage.getItem('earnings');
-    if (earnings) {
-        state.totalEarnings = parseFloat(earnings);
+{
+    const raw = localStorage.getItem('earnings');
+    if (raw !== null && raw !== '') {
+        try {
+            const parsed = JSON.parse(raw);
+            const amount = Array.isArray(parsed) ? parseFloat(parsed[0]) : parseFloat(parsed);
+            if (!isNaN(amount) && amount > 0) state.totalEarnings = amount;
+        } catch(e) {
+            const amount = parseFloat(raw);
+            if (!isNaN(amount) && amount > 0) state.totalEarnings = amount;
+        }
     }
+}
 
     // Load pack progress
     const progress = localStorage.getItem('pattern_recognition_pack_progress');
@@ -44,7 +53,7 @@ function loadProgress() {
 // Save Progress to localStorage
 function saveProgress() {
     // Save total earnings
-    localStorage.setItem('earnings', state.totalEarnings.toString());
+    localStorage.setItem('earnings', JSON.stringify([state.totalEarnings]));
 
     // Save pack progress
     const progressData = state.packs

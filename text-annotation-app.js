@@ -20,17 +20,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ================== EARNINGS AND PROGRESS ==================
 function loadEarningsProgress() {
-    const saved = localStorage.getItem('earnings');
-    if (saved) {
-        const data = JSON.parse(saved);
-        state.totalEarnings = data.total || 0;
+    const raw = localStorage.getItem('earnings');
+    if (raw !== null && raw !== '') {
+        try {
+            const parsed = JSON.parse(raw);
+            const amount = Array.isArray(parsed) ? parseFloat(parsed[0]) : parseFloat(parsed);
+            if (!isNaN(amount) && amount > 0) state.totalEarnings = amount;
+        } catch(e) {
+            const amount = parseFloat(raw);
+            if (!isNaN(amount) && amount > 0) state.totalEarnings = amount;
+        }
     }
 }
 
 function saveEarningsProgress() {
-    localStorage.setItem('earnings', JSON.stringify({
-        total: state.totalEarnings
-    }));
+    localStorage.setItem('earnings', JSON.stringify([state.totalEarnings]));
 }
 
 function loadPackProgress() {

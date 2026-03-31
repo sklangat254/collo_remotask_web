@@ -23,12 +23,21 @@ document.addEventListener('DOMContentLoaded', () => {
 // ========== EARNINGS AND PROGRESS MANAGEMENT ==========
 
 function loadEarningsProgress() {
-    const saved = localStorage.getItem('earnings');
-    state.totalEarnings = saved ? parseFloat(saved) : 0;
+    const raw = localStorage.getItem('earnings');
+    if (raw !== null && raw !== '') {
+        try {
+            const parsed = JSON.parse(raw);
+            const amount = Array.isArray(parsed) ? parseFloat(parsed[0]) : parseFloat(parsed);
+            if (!isNaN(amount) && amount > 0) state.totalEarnings = amount;
+        } catch(e) {
+            const amount = parseFloat(raw);
+            if (!isNaN(amount) && amount > 0) state.totalEarnings = amount;
+        }
+    }
 }
 
 function saveEarningsProgress() {
-    localStorage.setItem('earnings', state.totalEarnings.toString());
+    localStorage.setItem('earnings', JSON.stringify([state.totalEarnings]));
 }
 
 function loadPackProgress() {
