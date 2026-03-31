@@ -355,14 +355,14 @@ function simulateNotification(tag) {
     window.location.href = url.toString();
 }
 
-function resetUserData() {
-    localStorage.removeItem('signuplist');
-    localStorage.removeItem('bonus_claimed');
-    localStorage.removeItem('boughtaccount');
-    localStorage.removeItem('earnings');
-    console.log('User data reset');
-    window.location.reload();
-}
+//function resetUserData() {
+//    localStorage.removeItem('signuplist');
+//    localStorage.removeItem('bonus_claimed');
+//    localStorage.removeItem('boughtaccount');
+//    localStorage.removeItem('earnings');
+//    console.log('User data reset');
+//    window.location.reload();
+//}
 
 function setUserStatus(status) {
     switch (status) {
@@ -395,7 +395,7 @@ window.splashUtils = {
     skipAnimations: skipAnimations,
     testPopup: testPopup,
     simulateNotification: simulateNotification,
-    resetUserData: resetUserData,
+    //resetUserData: resetUserData,
     setUserStatus: setUserStatus,
     showBuyAccountPopup: showBuyAccountPopup,
     closeBuyAccountPopup: closeBuyAccountPopup
